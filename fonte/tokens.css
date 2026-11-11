@@ -1,0 +1,132 @@
+/* ds-wm — TOKENS. Única fonte de cor, tipografia, espaçamento, raio e sombra.
+   Para dar a identidade do seu projeto, sobrescreva estas variáveis num :root carregado DEPOIS de ds.css
+   (os nomes são a API; os valores são o tema padrão). */
+:root {
+  color-scheme: light;
+
+  /* Escala global: 1rem = 16px × escala; o Chart.js lê o mesmo valor. */
+  --ds-escala: 0.9;
+
+  /* Tipografia */
+  --ds-font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ds-fs-xs: .6875rem;
+  --ds-fs-sm: .75rem;
+  --ds-fs-md: .8125rem;
+  --ds-fs-lg: .875rem;
+  --ds-fs-card-nome: .9375rem;
+  --ds-fs-xl: 1.125rem;
+  --ds-fs-2xl: 1.875rem;
+  --ds-fs-3xl: 2.125rem;
+
+  /* Tinta (texto) */
+  --ds-ink:   #14213D;
+  --ds-ink-2: #34425E;
+  --ds-ink-3: #5B6B86;
+  --ds-ink-4: #8A97AE;
+  --ds-ink-on-dark: #FFFFFF;
+
+  /* Azul: cor principal, dados "normais" */
+  --ds-blue-50:  #EAF1FB;
+  --ds-blue-100: #EAF3FF;
+  --ds-blue-200: #C9DEF8;
+  --ds-blue-300: #A9D2FF;
+  --ds-blue-400: #8EC5FF;
+  --ds-blue-500: #4D94F0;
+  --ds-blue-600: #2B6CD8;
+  --ds-blue-700: #1F4FA3;
+
+  /* Rosa: destaque, comparação, atenção */
+  --ds-pink-50:  #FFF0F6;
+  --ds-pink-100: #FFEDF4;
+  --ds-pink-200: #F8CFE0;
+  --ds-pink-300: #F9B6D1;
+  --ds-pink-400: #F7A8C8;
+  --ds-pink-500: #E0529A;
+  --ds-pink-600: #B02A68;
+  --ds-pink-700: #A52563;
+
+  /* Verde: só estado de seleção de UI, nunca semântica de dado */
+  --ds-green-50:  #EAFBF1;
+  --ds-green-200: #A7E8C3;
+  --ds-green-700: #16794A;
+
+  /* Superfícies e bordas */
+  --ds-surface:   #FFFFFF;
+  --ds-surface-2: #FAFCFF;
+  --ds-border:    #E1E9F6;
+  --ds-border-2:  #DCE5F4;
+  --ds-grid:      #E7EEF9;
+  --ds-hover:     #EEF4FD;
+
+  /* Degradês (uso restrito: fundo da página, item ativo do menu, barras, avatar) */
+  --ds-page-bg:
+    radial-gradient(900px 480px at 8% -6%, #DCEBFF 0%, rgba(220,235,255,0) 70%),
+    radial-gradient(800px 460px at 96% 4%, #FFE1EE 0%, rgba(255,225,238,0) 70%),
+    #F5F8FD;
+  --ds-grad-nav:   linear-gradient(100deg, #E3F0FF 0%, #FFE9F2 100%);
+  --ds-grad-bar:   linear-gradient(180deg, #8EC5FF, #4D94F0);
+  --ds-grad-pico:  linear-gradient(180deg, #F9B6D1, #E0529A);
+  --ds-grad-avatar: linear-gradient(135deg, #9CC9FF, #F7B0CE);
+
+  /* Semântica de variação (delta): melhora azul, piora rosa */
+  --ds-up-bg: #E4F1FF;   --ds-up-fg: #1F4FA3;
+  --ds-down-bg: #FFE4EF; --ds-down-fg: #A52563;
+
+  /* Alerta de card */
+  --ds-alerta-borda: var(--ds-pink-500);
+  --ds-alerta-selo-bg: var(--ds-down-bg);
+  --ds-alerta-selo-fg: var(--ds-down-fg);
+
+  /* Paleta categórica de gráficos (ordem fixa) */
+  --ds-series-1: #4D94F0;
+  --ds-series-2: #E0529A;
+  --ds-series-3: #8EC5FF;
+  --ds-series-4: #F7A8C8;
+  --ds-series-5: #2B6CD8;
+  --ds-series-6: #B02A68;
+  --ds-series-7: #14213D;
+  --ds-series-8: #7C8DB5;
+  --ds-series-neutra: #A9ADB4;
+  --ds-opacidade-esmaecida: 0.25;
+
+  /* Tons de escolha: só para identificar opções em botões de formulário */
+  --ds-tom-azul: #2B6CD8;     --ds-tom-azul-tint: #E3EDFB;     --ds-tom-azul-fg: #1F57B0;
+  --ds-tom-verde: #2E9E62;    --ds-tom-verde-tint: #E6F6EC;    --ds-tom-verde-fg: #16794A;
+  --ds-tom-amarelo: #D9A520;  --ds-tom-amarelo-tint: #FDF5DC;  --ds-tom-amarelo-fg: #6E5200;
+  --ds-tom-laranja: #E07A2E;  --ds-tom-laranja-tint: #FDEDE0;  --ds-tom-laranja-fg: #8F440E;
+  --ds-tom-vermelho: #D2433F; --ds-tom-vermelho-tint: #FBE6E5; --ds-tom-vermelho-fg: #A12A27;
+  --ds-tom-roxo: #7B5CD6;     --ds-tom-roxo-tint: #EEE9FB;     --ds-tom-roxo-fg: #5236A8;
+  --ds-tom-cinza: #A9ADB4;    --ds-tom-cinza-tint: #EEEFF1;    --ds-tom-cinza-fg: #4B4F57;
+
+  /* Status: presença de uma pessoa e erro de UI (nunca dado de gráfico). base = ponto/borda; tint = fundo do selo; fg = texto sobre o tint */
+  --ds-status-disponivel: var(--ds-tom-verde);    --ds-status-disponivel-tint: var(--ds-tom-verde-tint);    --ds-status-disponivel-fg: var(--ds-tom-verde-fg);
+  --ds-status-ocupado:    var(--ds-tom-vermelho); --ds-status-ocupado-tint:    var(--ds-tom-vermelho-tint); --ds-status-ocupado-fg:    var(--ds-tom-vermelho-fg);
+  --ds-status-ausente:    var(--ds-tom-amarelo);  --ds-status-ausente-tint:    var(--ds-tom-amarelo-tint);  --ds-status-ausente-fg:    var(--ds-tom-amarelo-fg);
+  --ds-status-ferias:     var(--ds-tom-roxo);     --ds-status-ferias-tint:     var(--ds-tom-roxo-tint);     --ds-status-ferias-fg:     var(--ds-tom-roxo-fg);
+  --ds-status-offline:    var(--ds-tom-cinza);    --ds-status-offline-tint:    var(--ds-tom-cinza-tint);    --ds-status-offline-fg:    var(--ds-tom-cinza-fg);
+  --ds-status-erro:       var(--ds-tom-vermelho); --ds-status-erro-tint:       var(--ds-tom-vermelho-tint); --ds-status-erro-fg:       var(--ds-tom-vermelho-fg);
+
+  /* Espaçamento (escala de 4) */
+  --ds-sp-1: .25rem;  --ds-sp-2: .5rem;  --ds-sp-3: .75rem; --ds-sp-4: 1rem;
+  --ds-sp-5: 1.25rem; --ds-sp-6: 1.5rem; --ds-sp-7: 2rem; --ds-sp-8: 2.5rem;
+
+  /* Raios */
+  --ds-r-sm: .5625rem;
+  --ds-r-md: .75rem;
+  --ds-r-lg: 1.125rem;
+  --ds-r-xl: 1.25rem;
+  --ds-r-pill: 999px;
+
+  /* Sombras */
+  --ds-shadow-card: 0 1px 2px rgba(20,33,61,.04), 0 .75rem 1.75rem -1rem rgba(43,108,216,.22);
+  --ds-shadow-raised: 0 1px .1875rem rgba(20,33,61,.15);
+  --ds-shadow-modal: 0 1.5rem 4rem rgba(20,33,61,.35);
+
+  /* Layout */
+  --ds-w-sidebar: 15.75rem;
+  --ds-gap-cols:  1.5rem;
+  --ds-pad-page:  1.75rem;
+  --ds-bp-aside:  1062px;
+  --ds-bp-stack:  774px;
+}
+html { font-size: calc(100% * var(--ds-escala)); }

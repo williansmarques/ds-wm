@@ -1,0 +1,34 @@
+{
+  "name": "ds-wm",
+  "version": "1.153.0",
+  "description": "Design System em JavaScript puro (componentes, gráficos Chart.js e casca de painel), pronto para HTML ou Google Apps Script.",
+  "main": "dist/ds.js",
+  "scripts": {
+    "sincronizar": "node scripts/sincronizar.js",
+    "test": "node scripts/checar.js",
+    "exemplo": "node scripts/servir.js"
+  },
+  "keywords": [
+    "design-system",
+    "chartjs",
+    "apps-script",
+    "dashboard"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "acorn": "^8.19.0",
+    "acorn-walk": "^8.3.5",
+    "eslint": "^8.57.1",
+    "terser": "^5.51.2"
+  },
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/williansmarques/ds-wm.git"
+  }
+}

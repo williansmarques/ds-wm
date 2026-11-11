@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exemplo · ds-wm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.0/dist/chartjs-chart-treemap.min.js"></script>
+<!-- Num projeto seu: https://cdn.jsdelivr.net/gh/williansmarques/ds-wm@v1.153.0/dist/ds.css -->
+<link rel="stylesheet" href="../dist/ds.css">
+</head>
+<body>
+<!-- Casca fixa: o runtime desenha cada parte dentro destes ids. Troque só o conteúdo de .ds-brand. -->
+<div class="ds-app">
+  <div id="ds-faixa-como" hidden></div>
+  <header class="ds-cols ds-topbar">
+    <div class="ds-brand"><b>Meu projeto</b><div class="ds-top-inicio" id="ds-inicio" hidden></div></div>
+    <div class="ds-topbar__main">
+      <nav class="ds-modnav" id="ds-modulos" aria-label="Módulos"></nav>
+      <div class="ds-top-actions"><div class="ds-marca" id="ds-marca"></div><div class="ds-top-config" id="ds-config" hidden></div></div>
+    </div>
+  </header>
+  <div class="ds-cols ds-body">
+    <div class="ds-sidebar-col">
+      <div class="ds-verloja" id="ds-verloja"></div>
+      <div class="ds-assist-atalho" id="ds-assistente-atalho" hidden></div>
+      <aside class="ds-card ds-sidebar" id="ds-menu" aria-label="Menu do módulo"></aside>
+      <div class="ds-sidebar-acoes"><button class="ds-chip" data-ds-acao="apresentar">Apresentar a página</button><button class="ds-chip" data-ds-acao="exportar">Exportar</button><button class="ds-chip" data-ds-acao="compartilhar">Compartilhar</button></div>
+    </div>
+    <main class="ds-main">
+      <div id="ds-aviso-acesso" hidden></div>
+      <div class="ds-sticky-cabecalho">
+        <section id="ds-cabecalho"></section>
+        <section class="ds-filterbar" id="ds-filtros" aria-label="Filtros"></section>
+      </div>
+      <div id="ds-conteudo" class="ds-main" aria-live="polite"></div>
+    </main>
+  </div>
+  <footer class="ds-rodape"><span id="ds-rodape-versao"></span></footer>
+</div>
+
+<div class="ds-modal" id="ds-modal" role="dialog" aria-modal="true" aria-labelledby="ds-modal-titulo">
+  <div class="ds-modal__box">
+    <div class="ds-modal__head"><h2 id="ds-modal-titulo"></h2><button class="ds-iconbtn" id="ds-modal-fechar" aria-label="Fechar">✕</button></div>
+    <div class="ds-modal__body" id="ds-modal-corpo"></div>
+  </div>
+</div>
+
+<div class="ds-apresenta" id="ds-apresenta" role="dialog" aria-modal="true" aria-label="Apresentação da página">
+  <button class="ds-apresenta__fechar" data-ds-acao="apresenta-fechar" aria-label="Fechar apresentação">✕</button>
+  <button class="ds-apresenta__seta ds-apresenta__seta--esq" id="ds-apresenta-anterior" data-ds-acao="apresenta-anterior" aria-label="Gráfico anterior">‹</button>
+  <div class="ds-apresenta__corpo" id="ds-apresenta-corpo"></div>
+  <button class="ds-apresenta__seta ds-apresenta__seta--dir" id="ds-apresenta-proximo" data-ds-acao="apresenta-proximo" aria-label="Próximo gráfico">›</button>
+  <div class="ds-apresenta__contador" id="ds-apresenta-contador"></div>
+</div>
+
+<script>
+  // 1) Configuração (antes de ds.js). `servidor` é como as páginas buscam dados: aqui, dados fictícios.
+  window.DS_CONFIG = {
+    titulo: 'Meu projeto',
+    servidor: function (fn, params) {
+      if (fn === 'obterVendas') {
+        var dias = [], valores = [], anterior = [];
+        for (var i = 0; i < 30; i++) {
+          dias.push((i + 1) + '/10');
+          valores.push(Math.round(120 + 30 * Math.sin(i / 4) + (i % 7 > 4 ? -40 : 0)));
+          anterior.push(Math.round(105 + 25 * Math.sin(i / 5)));
+        }
+        return new Promise(function (ok) { setTimeout(function () { ok({ dias: dias, valores: valores, anterior: anterior }); }, 300); });
+      }
+      return Promise.reject(new Error('função desconhecida: ' + fn));
+    }
+  };
+</script>
+<!-- Num projeto seu: https://cdn.jsdelivr.net/gh/williansmarques/ds-wm@v1.153.0/dist/ds.js -->
+<script src="../dist/ds.js"></script>
+<script>
+  // 2) Menu: módulos → seções → páginas (ids nunca mudam: links dependem deles).
+  DS.MODULOS = [
+    { id: 'vendas', rotulo: 'Vendas', secoes: [{ id: 'analise', rotulo: 'Análise', paginas: [
+      { id: 'vendas.diario', rotulo: 'Vendas por dia' },
+      { id: 'vendas.status', rotulo: 'Equipe agora' },
+      { id: 'vendas.planejada', rotulo: 'Página planejada' }   // sem DS.pagina: aparece como "ainda não desenhada"
+    ] }] }
+  ];
+
+  // 3) Páginas: carregar() busca dados; render() só compõe DS.ui.*; depois() monta os gráficos.
+  DS.pagina({
+    id: 'vendas.diario', modulo: 'vendas', secao: 'analise', rotulo: 'Vendas por dia',
+    descricao: 'Quantos pedidos entraram por dia nos últimos 30 dias, comparado ao período anterior.',
+    filtros: ['periodo'],
+    carregar: function (estado) { return DS.servidor('obterVendas', estado); },
+    render: function (d) {
+      var U = DS.ui, soma = function (a) { return a.reduce(function (x, y) { return x + y; }, 0); };
+      var tot = soma(d.valores), totA = soma(d.anterior);
+      return U.kpis([
+        { rotulo: 'Pedidos no período', valor: DS.fmt.int(tot), delta: DS.fmt.delta(tot, totA), vs: 'vs anterior', bom: tot >= totA, spark: d.valores.slice(-14) },
+        { rotulo: 'Média por dia', valor: DS.fmt.int(tot / d.valores.length) },
+        { rotulo: 'Pico', valor: DS.fmt.int(Math.max.apply(null, d.valores)) }
+      ]) +
+      U.card({ titulo: 'Pedidos por dia', sub: 'Últimos 30 dias, comparado ao período anterior.',
+        legenda: [{ rotulo: 'Período atual', cor: DS.css('--ds-series-1') }, { rotulo: 'Período anterior', cor: DS.css('--ds-series-2') }],
+        corpo: U.canvas('c-vendas') });
+    },
+    depois: function (d) {
+      DS.chart.montar('c-vendas', { data: { labels: d.dias, datasets: [
+        { type: 'bar', label: 'Período atual', data: d.valores, backgroundColor: DS.chart.degrade('bar'), borderRadius: 6, maxBarThickness: 26, order: 1 },
+        { type: 'line', label: 'Período anterior', data: d.anterior, borderColor: DS.css('--ds-series-2'), borderDash: [5, 5], pointRadius: 0, order: 0 }
+      ] } });
+    }
+  });
+
+  DS.pagina({
+    id: 'vendas.status', modulo: 'vendas', secao: 'analise', rotulo: 'Equipe agora',
+    descricao: 'Exemplo de tabela simples, com formato por coluna.',
+    carregar: function () {
+      return [
+        { nome: 'Ana', status: 'disponivel' }, { nome: 'Bruno', status: 'ocupado' }, { nome: 'Carla', status: 'ausente' },
+        { nome: 'Diego', status: 'ferias' }, { nome: 'Eva', status: 'offline' }
+      ];
+    },
+    render: function (linhas) {
+      var rot = { disponivel: 'Disponível', ocupado: 'Ocupado', ausente: 'Ausente', ferias: 'Férias', offline: 'Offline' };
+      return DS.ui.card({ titulo: 'Equipe agora', corpo: DS.ui.tabela({
+        colunas: [{ chave: 'nome', rotulo: 'Pessoa' }, { chave: 'status', rotulo: 'Status', formato: function (s) { return rot[s]; } }],
+        linhas: linhas }) });
+    }
+  });
+
+  DS.iniciar();
+</script>
+</body>
+</html>
